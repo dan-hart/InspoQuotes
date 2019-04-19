@@ -42,6 +42,7 @@ class QuoteTableViewController: UITableViewController {
 	// MARK: - View
     override func viewDidLoad() {
         super.viewDidLoad()
+		premiumQuotesIAP.delegate = self
 		reloadQuotes()
     }
 
@@ -74,6 +75,11 @@ class QuoteTableViewController: UITableViewController {
 			&& quote == purchaseText {
 			cell?.textLabel?.textColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1)
 			cell?.accessoryType = .disclosureIndicator
+		} else {
+			// since cells are re-used, we need to explicitly set
+			// the cell display values back to default
+			cell?.textLabel?.textColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+			cell?.accessoryType = .none
 		}
 
 		return cell!
@@ -84,13 +90,17 @@ class QuoteTableViewController: UITableViewController {
 		tableView.deselectRow(at: indexPath, animated: true)
 		let quote = quotes[indexPath.row]
 		if quote == purchaseText {
-			premiumQuotesIAP.startBuy()
+			premiumQuotesIAP.startByTest(giving: .purchased)
 		}
 	}
 
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
-        
+		premiumQuotesIAP.startByTest(giving: .restored)
     }
+	@IBAction func refreshPressed(_ sender: UIBarButtonItem) {
+		// TODO: Delete this. It's for testing only
+		premiumQuotesIAP.isPurchased = false
+	}
 }
 
 extension QuoteTableViewController: InAppPurchaseDelegate {

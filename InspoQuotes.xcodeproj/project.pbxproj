@@ -48,6 +48,23 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		52940DB3226A77230065D206 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				AD18A84121285CAF00F6BF05 /* Main.storyboard */,
+				AD18A84621285CB000F6BF05 /* LaunchScreen.storyboard */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		52940DB4226A772A0065D206 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				AD18A84F21285D4800F6BF05 /* QuoteTableViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
 		AD18A83121285CAF00F6BF05 = {
 			isa = PBXGroup;
 			children = (
@@ -70,21 +87,12 @@
 			isa = PBXGroup;
 			children = (
 				AD18A83D21285CAF00F6BF05 /* AppDelegate.swift */,
-				AD18A84F21285D4800F6BF05 /* QuoteTableViewController.swift */,
-				AD18A84121285CAF00F6BF05 /* Main.storyboard */,
+				52940DB4226A772A0065D206 /* Controller */,
+				52940DB3226A77230065D206 /* View */,
 				AD18A84421285CB000F6BF05 /* Assets.xcassets */,
-				AD18A84621285CB000F6BF05 /* LaunchScreen.storyboard */,
-				AD18A8552128605C00F6BF05 /* Supporting Files */,
 				AD18A84921285CB000F6BF05 /* Info.plist */,
 			);
 			path = InspoQuotes;
-			sourceTree = "<group>";
-		};
-		AD18A8552128605C00F6BF05 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

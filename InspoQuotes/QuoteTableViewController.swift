@@ -39,14 +39,22 @@ class QuoteTableViewController: UITableViewController {
         "Believe in yourself, take on your challenges, dig deep within yourself to conquer fears. Never let anyone bring you down. You got to keep going. – Chantal Sutherland"
     ]
 
+	// MARK: - View
     override func viewDidLoad() {
         super.viewDidLoad()
+		reloadQuotes()
+    }
 
+	func reloadQuotes() {
+		quotes.removeAll()
 		quotes.append(contentsOf: freeQuotes)
-		if !premiumQuotesIAP.isPurchased {
+		if premiumQuotesIAP.isPurchased {
+			quotes.append(contentsOf: premiumQuotes)
+		} else {
 			quotes.append(purchaseText)
 		}
-    }
+		tableView.reloadData()
+	}
 
     // MARK: - Table view data source
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -55,14 +63,15 @@ class QuoteTableViewController: UITableViewController {
 
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 		let cell = tableView.dequeueReusableCell(withIdentifier: "QuoteCell")
-		cell!.textLabel!.text = quotes[indexPath.row]
+		let quote = quotes[indexPath.row]
+		cell!.textLabel!.text = quote
 		cell!.textLabel!.numberOfLines = 0
 
 		// If we still need to buy quotes,
 		// and it's the last cell, make
 		// the cell a purchase button
 		if !premiumQuotesIAP.isPurchased
-			&& indexPath.row == quotes.count - 1 {
+			&& quote == purchaseText {
 			cell?.textLabel?.textColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1)
 			cell?.accessoryType = .disclosureIndicator
 		}
@@ -75,11 +84,17 @@ class QuoteTableViewController: UITableViewController {
 		tableView.deselectRow(at: indexPath, animated: true)
 		let quote = quotes[indexPath.row]
 		if quote == purchaseText {
-			// buy
+			premiumQuotesIAP.startBuy()
 		}
 	}
 
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
         
     }
+}
+
+extension QuoteTableViewController: InAppPurchaseDelegate {
+	func purchaseStatus(changedTo isPurchased: Bool) {
+		reloadQuotes()
+	}
 }

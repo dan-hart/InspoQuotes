@@ -11,9 +11,17 @@ import Premise
 
 class QuoteTableViewController: UITableViewController {
 
-	var premiumQuotesIAP: InAppPurchase?
+	lazy var premiumQuotesIAP: InAppPurchase = {
+		return InAppPurchase(named: "PremiumQuotes", using: Bundle.main.bundleIdentifier!)
+	}()
+
+	let purchaseText = "Get more quotes..."
+
+	lazy var quotes: [String] = {
+		return [String]()
+	}()
     
-    var quotesToShow = [
+    let freeQuotes = [
         "Our greatest glory is not in never falling, but in rising every time we fall. — Confucius",
         "All our dreams can come true, if we have the courage to pursue them. – Walt Disney",
         "It does not matter how slowly you go as long as you do not stop. – Confucius",
@@ -34,20 +42,42 @@ class QuoteTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-		premiumQuotesIAP = InAppPurchase(with: "PremiumQuotes", using: "com.codedbydan.InspoQuotes")
+		quotes.append(contentsOf: freeQuotes)
+		if !premiumQuotesIAP.isPurchased {
+			quotes.append(purchaseText)
+		}
     }
 
     // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+		return quotes.count
     }
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "QuoteCell")
+		cell!.textLabel!.text = quotes[indexPath.row]
+		cell!.textLabel!.numberOfLines = 0
+
+		// If we still need to buy quotes,
+		// and it's the last cell, make
+		// the cell a purchase button
+		if !premiumQuotesIAP.isPurchased
+			&& indexPath.row == quotes.count - 1 {
+			cell?.textLabel?.textColor = #colorLiteral(red: 0.1411764771, green: 0.3960784376, blue: 0.5647059083, alpha: 1)
+			cell?.accessoryType = .disclosureIndicator
+		}
+
+		return cell!
+	}
+
+	// MARK: - table View Delegate
+	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+		tableView.deselectRow(at: indexPath, animated: true)
+		let quote = quotes[indexPath.row]
+		if quote == purchaseText {
+			// buy
+		}
+	}
 
     @IBAction func restorePressed(_ sender: UIBarButtonItem) {
         
